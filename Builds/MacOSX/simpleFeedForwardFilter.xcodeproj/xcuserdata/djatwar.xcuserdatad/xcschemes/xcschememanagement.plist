@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>simpleFeedForwardFilter - AU.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>simpleFeedForwardFilter - All.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+		<key>simpleFeedForwardFilter - Shared Code.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>simpleFeedForwardFilter - Standalone Plugin.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>3</integer>
+		</dict>
+		<key>simpleFeedForwardFilter - VST.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>04705C662E11B1C08DA35D87</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>40A1B2D86455CA7778DF18D7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>8E6836A44E1E8D05DDFD42DC</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D75C64F451BF182BA0E18609</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E34E54AC068C4B76AD5AA938</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>
