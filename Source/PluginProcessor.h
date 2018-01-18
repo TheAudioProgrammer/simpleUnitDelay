@@ -11,6 +11,7 @@
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
+#include "DspProcess.h"
 
 
 //==============================================================================
@@ -56,23 +57,18 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    //variables need to be public for editor to access
-    //coefficients...slider is a1
-    float a0L;
-    float a1L;
-    
-    float a0R;
-    float a1R;
-    
-    //one sample delay
-    float z1L;
-    float z1R;
-    
     //Value tree to manage communication between editor and processor
     AudioProcessorValueTreeState tree;
 
 private:
+    DspProcess dspProcessLeft;
+    DspProcess dspProcessRight;
     
+    //one sample delays for left and right channel
+    float delayedSampleL;
+    float delayedSampleR;
+    
+    float coefficientValue;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleFeedForwardFilterAudioProcessor)

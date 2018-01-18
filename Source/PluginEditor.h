@@ -17,7 +17,7 @@
 //==============================================================================
 /**
 */
-class SimpleFeedForwardFilterAudioProcessorEditor : public AudioProcessorEditor, public Slider::Listener
+class SimpleFeedForwardFilterAudioProcessorEditor : public AudioProcessorEditor
 {
 public:
     SimpleFeedForwardFilterAudioProcessorEditor (SimpleFeedForwardFilterAudioProcessor&);
@@ -27,16 +27,11 @@ public:
     void paint (Graphics&) override;
     void resized() override;
     
-    //inheriting from slider listener so need this pure virtual function
-    void sliderValueChanged (Slider*) override;
-    
     //create a scoped pointer slider attachment to connect slider value to value on processor
-    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> a1Value;
+    ScopedPointer<AudioProcessorValueTreeState::SliderAttachment> sliderValue;
 
 private:
-    
-    //slider to control a1 coefficient
-    Slider a1Control;
+    Slider valueControl;
     
     
     // This reference is provided as a quick way for your editor to

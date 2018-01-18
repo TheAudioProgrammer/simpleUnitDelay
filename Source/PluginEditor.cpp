@@ -18,15 +18,14 @@ SimpleFeedForwardFilterAudioProcessorEditor::SimpleFeedForwardFilterAudioProcess
 {
     
     //initialization for a1 Control Slider
-    a1Control.setSliderStyle(Slider::SliderStyle::LinearVertical);
-    a1Control.setRange(0.0f, 0.49f);
-    a1Control.setValue(0.0f);
-    a1Control.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 30);
-    a1Control.addListener(this);
-    addAndMakeVisible(&a1Control);
+    valueControl.setSliderStyle(Slider::SliderStyle::LinearVertical);
+    valueControl.setRange(0.0f, 0.49f);
+    valueControl.setValue(0.0f);
+    valueControl.setTextBoxStyle(Slider::TextBoxBelow, true, 50, 30);
+    addAndMakeVisible(&valueControl);
     
     //use slider attachment pointer to link a1Control to processor values
-    a1Value = new AudioProcessorValueTreeState::SliderAttachment (processor.tree, "a1Control", a1Control);
+    sliderValue = new AudioProcessorValueTreeState::SliderAttachment (processor.tree, "valueControl", valueControl);
     
     setSize (200, 200);
 }
@@ -53,18 +52,10 @@ void SimpleFeedForwardFilterAudioProcessorEditor::paint (Graphics& g)
 void SimpleFeedForwardFilterAudioProcessorEditor::resized()
 {
     //draw the slider
-    a1Control.setBounds(75, 30, 50, 140);
+    valueControl.setBounds(75, 30, 50, 140);
 }
 
-//don't really need this since processor variable is controlled by the tree, but it's a pure virtual function 
-void SimpleFeedForwardFilterAudioProcessorEditor::sliderValueChanged(Slider* slider)
-{
-    if (slider == &a1Control)
-    {
-        processor.a1L = a1Control.getValue();
-        processor.a1R = a1Control.getValue();
-    }
-}
+
 
 
 

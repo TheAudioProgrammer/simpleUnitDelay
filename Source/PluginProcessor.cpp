@@ -26,10 +26,10 @@ SimpleFeedForwardFilterAudioProcessor::SimpleFeedForwardFilterAudioProcessor()
 #endif
 {
     //create normalisable range object for value tree param
-    NormalisableRange<float> a1Range (0.0f, 0.49f);
+    NormalisableRange<float> valueRange (0.0f, 0.49f);
     
     //tree connects to slider from editor to value in processor
-    tree.createAndAddParameter("a1Control", "A1Control", "a1Control", a1Range, 0.0, nullptr, nullptr);
+    tree.createAndAddParameter("valueControl", "valueControl", "valueControl", valueRange, 0.0, nullptr, nullptr);
     
     
     
@@ -105,9 +105,9 @@ void SimpleFeedForwardFilterAudioProcessor::changeProgramName (int index, const 
 //==============================================================================
 void SimpleFeedForwardFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    //reinitialize z delay to 0
-    z1L = 0.0f;
-    z1R = 0.0f;
+    //reinitialize delayed sample to 0
+    delayedSampleL = 0.0f;
+    delayedSampleR = 0.0f;
 }
 
 void SimpleFeedForwardFilterAudioProcessor::releaseResources()
@@ -149,67 +149,28 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
-    //iterate through channels, reading and writing to one side at a time
-    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-    {
-        //input data reads from buffer, then we process data and put back out
-        const float* inputDataLeft = buffer.getReadPointer(0, 0);
-        float* outputDataLeft = buffer.getWritePointer (0, 0);
-        
-        const float* inputDataRight = buffer.getReadPointer(1, 0);
-        float* outputDataRight = buffer.getWritePointer(1, 0);
+        //input data
+        const float* inputDataLeft = buffer.getReadPointer(0);
+        const float* inputDataRight = buffer.getReadPointer(1);
+    
+        //output data
+        float* outputDataLeft = buffer.getWritePointer (0);
+        float* outputDataRight = buffer.getWritePointer(1);
     
         //place audio samples into buffer
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-            if (channel == 0)
-            {
             //get the values here from the slider
-            a1L = *tree.getRawParameterValue("a1Control");
-        
-            //design equation a0 = a1 - 1.0
-            a0L = a1L - 1.0;
-        
+            coefficientValue = *tree.getRawParameterValue("valueControl");
+            
             //get current value from read pointer
-            float xnL = inputDataLeft[sample];
+            float inputSampleL = inputDataLeft[sample];
+            float inputSampleR = inputDataRight[sample];
             
-            //delay by one sample---previous value from output is now the delayed value
-            float xn1L = z1L;
-            
-            //use difference equation y(n) = a0x(n) + a1x(n-1)
-            float ynL = a0L * xnL + a1L * xn1L;
-        
-            //current output is stored to become previous output in next loop
-            z1L = xnL;
-        
             //output to speakers
-            outputDataLeft[sample] = ynL;
-            }
-            else if (channel == 1)
-            {
-                //get the values here from the slider
-                a1R = *tree.getRawParameterValue("a1Control");
-                
-                //design equation a0 = a1 - 1.0
-                a0R = a1R - 1.0;
-                
-                //get current value from read pointer
-                float xnR = inputDataRight[sample];
-                
-                //delay by one sample---previous value from output is now the delayed value
-                float xn1R = z1R;
-                
-                //use difference equation y(n) = a0x(n) + a1x(n-1)
-                float ynR = a0R * xnR + a1R * xn1R;
-                
-                //current output is stored to become previous output in next loop
-                z1R = xnR;
-                
-                //output to speakers
-                outputDataRight[sample] = ynR;
-            }
+            outputDataLeft[sample] = dspProcessLeft.process(inputSampleL, delayedSampleL, coefficientValue);
+            outputDataRight[sample] = dspProcessRight.process(inputSampleR, delayedSampleR, coefficientValue);
         }
-    }
 }
 
 //==============================================================================

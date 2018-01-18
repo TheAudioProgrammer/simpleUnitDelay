@@ -21,8 +21,8 @@
       <FILE id="VTvHyZ" name="PluginEditor.cpp" compile="1" resource="0"
             file="Source/PluginEditor.cpp"/>
       <FILE id="UyXEqr" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="WU9OZD" name="Filter.cpp" compile="1" resource="0" file="Source/Filter.cpp"/>
-      <FILE id="oYIEJM" name="Filter.h" compile="0" resource="0" file="Source/Filter.h"/>
+      <FILE id="R0fPUw" name="DspProcess.cpp" compile="1" resource="0" file="Source/DspProcess.cpp"/>
+      <FILE id="Rr5mGa" name="DspProcess.h" compile="0" resource="0" file="Source/DspProcess.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
