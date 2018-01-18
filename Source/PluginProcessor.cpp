@@ -106,7 +106,8 @@ void SimpleFeedForwardFilterAudioProcessor::changeProgramName (int index, const 
 void SimpleFeedForwardFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     //reinitialize z delay to 0
-    z1 = 0.0f;
+    z1L = 0.0f;
+    z1R = 0.0f;
 }
 
 void SimpleFeedForwardFilterAudioProcessor::releaseResources()
@@ -152,32 +153,61 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
         //input data reads from buffer, then we process data and put back out
-        const float* inputData = buffer.getReadPointer(channel, 0);
-        float* outputData = buffer.getWritePointer (channel, 0);
+        const float* inputDataLeft = buffer.getReadPointer(0, 0);
+        float* outputDataLeft = buffer.getWritePointer (0, 0);
+        
+        const float* inputDataRight = buffer.getReadPointer(1, 0);
+        float* outputDataRight = buffer.getWritePointer(1, 0);
     
         //place audio samples into buffer
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
+            if (channel == 0)
+            {
             //get the values here from the slider
-            a1 = *tree.getRawParameterValue("a1Control");
+            a1L = *tree.getRawParameterValue("a1Control");
         
             //design equation a0 = a1 - 1.0
-            a0 = a1 - 1.0;
+            a0L = a1L - 1.0;
         
             //get current value from read pointer
-            float xn = inputData[sample];
+            float xnL = inputDataLeft[sample];
             
             //delay by one sample---previous value from output is now the delayed value
-            float xn1 = z1;
+            float xn1L = z1L;
             
             //use difference equation y(n) = a0x(n) + a1x(n-1)
-            float yn = a0 * xn + a1 * xn1;
+            float ynL = a0L * xnL + a1L * xn1L;
         
             //current output is stored to become previous output in next loop
-            z1 = xn;
+            z1L = xnL;
         
             //output to speakers
-            outputData[sample] = yn;
+            outputDataLeft[sample] = ynL;
+            }
+            else if (channel == 1)
+            {
+                //get the values here from the slider
+                a1R = *tree.getRawParameterValue("a1Control");
+                
+                //design equation a0 = a1 - 1.0
+                a0R = a1R - 1.0;
+                
+                //get current value from read pointer
+                float xnR = inputDataRight[sample];
+                
+                //delay by one sample---previous value from output is now the delayed value
+                float xn1R = z1R;
+                
+                //use difference equation y(n) = a0x(n) + a1x(n-1)
+                float ynR = a0R * xnR + a1R * xn1R;
+                
+                //current output is stored to become previous output in next loop
+                z1R = xnR;
+                
+                //output to speakers
+                outputDataRight[sample] = ynR;
+            }
         }
     }
 }

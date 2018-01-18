@@ -58,11 +58,15 @@ public:
 
     //variables need to be public for editor to access
     //coefficients...slider is a1
-    float a0;
-    float a1;
+    float a0L;
+    float a1L;
+    
+    float a0R;
+    float a1R;
     
     //one sample delay
-    float z1;
+    float z1L;
+    float z1R;
     
     //Value tree to manage communication between editor and processor
     AudioProcessorValueTreeState tree;

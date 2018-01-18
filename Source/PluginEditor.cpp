@@ -61,7 +61,8 @@ void SimpleFeedForwardFilterAudioProcessorEditor::sliderValueChanged(Slider* sli
 {
     if (slider == &a1Control)
     {
-        processor.a1 = a1Control.getValue();
+        processor.a1L = a1Control.getValue();
+        processor.a1R = a1Control.getValue();
     }
 }
 
