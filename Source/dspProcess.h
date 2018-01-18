@@ -15,7 +15,7 @@
 class DspProcess
 {
 public:
-    float process (float currentSample, float delayedSample, float sliderValue);
+    float process (float currentSample, float &delayedSample, float sliderValue);
     
 private:
     

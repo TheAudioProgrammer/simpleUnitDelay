@@ -106,8 +106,7 @@ void SimpleFeedForwardFilterAudioProcessor::changeProgramName (int index, const 
 void SimpleFeedForwardFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     //reinitialize delayed sample to 0
-    delayedSampleL = 0.0f;
-    delayedSampleR = 0.0f;
+    delayedSample = 0.0f;
 }
 
 void SimpleFeedForwardFilterAudioProcessor::releaseResources()
@@ -149,13 +148,13 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
     
+    for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+    {
         //input data
-        const float* inputDataLeft = buffer.getReadPointer(0);
-        const float* inputDataRight = buffer.getReadPointer(1);
+        const float* inputData = buffer.getReadPointer(channel);
     
         //output data
-        float* outputDataLeft = buffer.getWritePointer (0);
-        float* outputDataRight = buffer.getWritePointer(1);
+        float* outputData = buffer.getWritePointer (channel);
     
         //place audio samples into buffer
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
@@ -164,13 +163,13 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
             coefficientValue = *tree.getRawParameterValue("valueControl");
             
             //get current value from read pointer
-            float inputSampleL = inputDataLeft[sample];
-            float inputSampleR = inputDataRight[sample];
+            float inputSample = inputData[sample];
+            
             
             //output to speakers
-            outputDataLeft[sample] = dspProcessLeft.process(inputSampleL, delayedSampleL, coefficientValue);
-            outputDataRight[sample] = dspProcessRight.process(inputSampleR, delayedSampleR, coefficientValue);
+            outputData[sample] = dspProcess.process(inputSample, delayedSample, coefficientValue);
         }
+    }
 }
 
 //==============================================================================

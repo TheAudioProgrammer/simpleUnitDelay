@@ -61,13 +61,12 @@ public:
     AudioProcessorValueTreeState tree;
 
 private:
-    DspProcess dspProcessLeft;
-    DspProcess dspProcessRight;
+    DspProcess dspProcess;
     
-    //one sample delays for left and right channel
-    float delayedSampleL;
-    float delayedSampleR;
+    //one sample delay
+    float delayedSample;
     
+    //slider value
     float coefficientValue;
     
     //==============================================================================
