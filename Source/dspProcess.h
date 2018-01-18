@@ -15,8 +15,11 @@
 class DspProcess
 {
 public:
-    float process (float currentSample, float &delayedSample, float sliderValue);
+    void prepareToPlay();
+    
+    float process (float currentSample, float sliderValue);
     
 private:
+    float delayedSample;
     
 };

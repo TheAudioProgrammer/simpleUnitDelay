@@ -61,10 +61,9 @@ public:
     AudioProcessorValueTreeState tree;
 
 private:
-    DspProcess dspProcess;
+    static const int kChannels = 2;
     
-    //one sample delay
-    float delayedSample;
+    DspProcess dspProcess[kChannels];
     
     //slider value
     float coefficientValue;

@@ -10,7 +10,12 @@
 
 #include "DspProcess.h"
 
-float DspProcess::process (float currentSample, float &delayedSample, float sliderValue)
+void DspProcess::prepareToPlay()
+{
+    delayedSample = 0.0f;
+}
+
+float DspProcess::process (float currentSample, float sliderValue)
 {
     //design equation a0 = a1 - 1.0
     float a0 = sliderValue - 1.0;

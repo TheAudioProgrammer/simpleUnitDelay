@@ -30,10 +30,6 @@ SimpleFeedForwardFilterAudioProcessor::SimpleFeedForwardFilterAudioProcessor()
     
     //tree connects to slider from editor to value in processor
     tree.createAndAddParameter("valueControl", "valueControl", "valueControl", valueRange, 0.0, nullptr, nullptr);
-    
-    
-    
-    
 }
 
 SimpleFeedForwardFilterAudioProcessor::~SimpleFeedForwardFilterAudioProcessor()
@@ -105,8 +101,11 @@ void SimpleFeedForwardFilterAudioProcessor::changeProgramName (int index, const 
 //==============================================================================
 void SimpleFeedForwardFilterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    //reinitialize delayed sample to 0
-    delayedSample = 0.0f;
+    
+    for (int i = 0; i < kChannels; i++)
+    {
+        dspProcess[i].prepareToPlay();
+    }
 }
 
 void SimpleFeedForwardFilterAudioProcessor::releaseResources()
@@ -144,9 +143,11 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
     ScopedNoDenormals noDenormals;
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
+    
 
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
+    
     
     for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
     {
@@ -155,19 +156,19 @@ void SimpleFeedForwardFilterAudioProcessor::processBlock (AudioSampleBuffer& buf
     
         //output data
         float* outputData = buffer.getWritePointer (channel);
+        
+        //get the values here from the slider
+        coefficientValue = *tree.getRawParameterValue("valueControl");
     
+        
         //place audio samples into buffer
         for (int sample = 0; sample < buffer.getNumSamples(); ++sample)
         {
-            //get the values here from the slider
-            coefficientValue = *tree.getRawParameterValue("valueControl");
-            
             //get current value from read pointer
             float inputSample = inputData[sample];
             
-            
             //output to speakers
-            outputData[sample] = dspProcess.process(inputSample, delayedSample, coefficientValue);
+            outputData[sample] = dspProcess[channel].process(inputSample, coefficientValue);
         }
     }
 }
